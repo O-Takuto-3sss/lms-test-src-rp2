@@ -39,9 +39,16 @@ public class Case02 {
 	@Test
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
-	void test01() {
+	void test01() throws Exception {
 		// ログイン画面を開く
 		goTo("http://localhost:8080/lms/");
+
+		String currentUrl = WebDriverUtils.webDriver.getCurrentUrl();
+		String title = WebDriverUtils.webDriver.getTitle();
+
+		// 成功判定
+		assertTrue(currentUrl.contains("/lms/") && title.contains("ログイン"),
+				"トップページ画面への遷移に失敗しました");
 	}
 
 	@Test
@@ -59,13 +66,15 @@ public class Case02 {
 		// ログインボタンをクリック
 		WebDriverUtils.webDriver.findElement(By.cssSelector("input[type='submit'][value='ログイン']")).click();
 		Thread.sleep(2000);
-		String bodyText = WebDriverUtils.webDriver.findElement(By.tagName("body")).getText();
+
+		String currentUrl = WebDriverUtils.webDriver.getCurrentUrl();
+		String title = WebDriverUtils.webDriver.getTitle();
 
 		getEvidence("Case02/2.Login_Error");
 
 		// 成功判定
-		assertTrue(bodyText.contains("お知らせ") || bodyText.contains("ログアウト"),
-				"ログインに失敗した可能性があります");
+		assertTrue(currentUrl.contains("/lms/") && title.contains("ログイン"),
+				"ログイン失敗後の画面がトップページになっていません");
 	}
 
 }

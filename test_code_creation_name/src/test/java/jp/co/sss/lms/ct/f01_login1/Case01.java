@@ -1,6 +1,7 @@
 package jp.co.sss.lms.ct.f01_login1;
 
 import static jp.co.sss.lms.ct.util.WebDriverUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+
+import jp.co.sss.lms.ct.util.WebDriverUtils;
 
 /**
  * 結合テスト ログイン機能①
@@ -39,5 +42,12 @@ public class Case01 {
 		goTo("http://localhost:8080/lms/");
 
 		getEvidence("Case01/TopPage");
+
+		String currentUrl = WebDriverUtils.webDriver.getCurrentUrl();
+		String title = WebDriverUtils.webDriver.getTitle();
+
+		// 成功判定
+		assertTrue(currentUrl.contains("/lms/") && title.contains("ログイン"),
+				"トップページ画面への遷移に失敗しました");
 	}
 }
