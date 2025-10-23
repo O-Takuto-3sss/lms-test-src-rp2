@@ -1,6 +1,7 @@
 package jp.co.sss.lms.ct.f01_login1;
 
 import static jp.co.sss.lms.ct.util.WebDriverUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +10,10 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.By;
+
+import jp.co.sss.lms.ct.util.ConfigUtils;
+import jp.co.sss.lms.ct.util.WebDriverUtils;
 
 /**
  * 結合テスト ログイン機能①
@@ -35,14 +40,32 @@ public class Case02 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
+		// ログイン画面を開く
+		goTo("http://localhost:8080/lms/");
 	}
 
 	@Test
 	@Order(2)
 	@DisplayName("テスト02 DBに登録されていないユーザーでログイン")
-	void test02() {
-		// TODO ここに追加
+	void test02() throws Exception {
+		// ConfigUtilsからIDとパスワードを取得
+		String loginId = ConfigUtils.getErrorLoginId();
+		String password = ConfigUtils.getErrorPassword();
+		WebDriverUtils.webDriver.findElement(By.id("loginId")).sendKeys(loginId);
+		WebDriverUtils.webDriver.findElement(By.id("password")).sendKeys(password);
+
+		getEvidence("Case02/01.Login_Before");
+
+		// ログインボタンをクリック
+		WebDriverUtils.webDriver.findElement(By.cssSelector("input[type='submit'][value='ログイン']")).click();
+		Thread.sleep(2000);
+		String bodyText = WebDriverUtils.webDriver.findElement(By.tagName("body")).getText();
+
+		getEvidence("Case02/2.Login_Error");
+
+		// 成功判定
+		assertTrue(bodyText.contains("お知らせ") || bodyText.contains("ログアウト"),
+				"ログインに失敗した可能性があります");
 	}
 
 }
