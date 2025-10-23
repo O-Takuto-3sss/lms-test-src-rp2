@@ -10,6 +10,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -30,9 +31,13 @@ public class WebDriverUtils {
 	 */
 	public static void createDriver() {
 		System.setProperty("webdriver.chrome.driver", "lib/chromedriver.exe");
-		webDriver = new ChromeDriver();
+
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("force-device-scale-factor=0.9"); // 表示90％
+
+		webDriver = new ChromeDriver(options);
 	}
-	
+
 	/**
 	 * インスタンス終了
 	 */
@@ -48,7 +53,7 @@ public class WebDriverUtils {
 		webDriver.get(url);
 		pageLoadTimeout(5);
 	}
-	
+
 	/**
 	 * ページロードタイムアウト設定
 	 * @param second
@@ -56,7 +61,7 @@ public class WebDriverUtils {
 	public static void pageLoadTimeout(int second) {
 		webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(second));
 	}
-	
+
 	/**
 	 * 要素の可視性タイムアウト設定
 	 * @param locater
@@ -66,7 +71,7 @@ public class WebDriverUtils {
 		WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(second));
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locater));
 	}
-	
+
 	/**
 	 * 指定ピクセル分だけスクロール
 	 * @param pixel
@@ -75,7 +80,6 @@ public class WebDriverUtils {
 		((JavascriptExecutor) webDriver).executeScript("window.scrollBy(0," + pixel + ");");
 	}
 
-	
 	/**
 	 * 指定位置までスクロール
 	 * @param pixel
@@ -86,14 +90,22 @@ public class WebDriverUtils {
 
 	/**
 	 * エビデンス取得
-	 * @param instance
+	 * @param relativePath フォルダ＋ファイル名
 	 */
-	public static void getEvidence(Object instance) {
+	public static void getEvidence(String relativePath) {
 		File tempFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
 		try {
-			String className = instance.getClass().getEnclosingClass().getSimpleName();
-			String methodName = instance.getClass().getEnclosingMethod().getName();
-			Files.move(tempFile, new File("evidence\\" + className + "_" + methodName + ".png"));
+			String baseDir = "evidence"; // 基準フォルダ
+			File file = new File(baseDir, relativePath + ".png");
+
+			// フォルダがなければ作成
+			File parentDir = file.getParentFile();
+			if (!parentDir.exists()) {
+				parentDir.mkdirs();
+			}
+
+			// スクリーンショットを移動
+			Files.move(tempFile, file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -104,15 +116,16 @@ public class WebDriverUtils {
 	 * @param instance
 	 * @param suffix
 	 */
-	public static void getEvidence(Object instance, String suffix) {
-		File tempFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-		try {
-			String className = instance.getClass().getEnclosingClass().getSimpleName();
-			String methodName = instance.getClass().getEnclosingMethod().getName();
-			Files.move(tempFile, new File("evidence\\" + className + "_" + methodName + "_" + suffix + ".png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	//	public static void getEvidence(Object instance, String suffix) {
+	//		File tempFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
+	//		try {
+	//			String className = instance.getClass().getEnclosingClass().getSimpleName();
+	//			String methodName = instance.getClass().getEnclosingMethod().getName();
+	//			String dirPath = "test_code_creation_onuma/evidence"; // 相対パス
+	//			File dir = new File(dirPath);
+	//			Files.move(tempFile, new File(dir, className + "_" + methodName + "_" + suffix + ".png"));
+	//		} catch (IOException e) {
+	//			e.printStackTrace();
+	//		}
+	//	}
 }
