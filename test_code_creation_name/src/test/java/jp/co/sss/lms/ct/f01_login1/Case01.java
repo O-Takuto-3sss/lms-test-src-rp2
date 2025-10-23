@@ -34,8 +34,10 @@ public class Case01 {
 	@Test
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
-	void test01() {
-		// TODO ここに追加
-	}
+	void test01() throws Exception {
+		// ログイン画面を開く
+		goTo("http://localhost:8080/lms/");
 
+		getEvidence("Case01/TopPage");
+	}
 }
