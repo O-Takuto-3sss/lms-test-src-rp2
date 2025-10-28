@@ -52,4 +52,19 @@ public class ConfigUtils {
 		return prop.getProperty("errorLogin.password");
 	}
 
+	/**
+	 * FAQ画面で使用する検索キーワードを取得
+	 * @return FAQ検索キーワード
+	 */
+	public static String getFaqSearchKeyword() {
+		return prop.getProperty("faqSearchKeyword");
+	}
+
+	/**
+	 * FAQカテゴリIDを取得
+	 * @return FAQカテゴリID
+	 */
+	public static String getFaqCategoryId() {
+		return prop.getProperty("faqCategoryId");
+	}
 }
