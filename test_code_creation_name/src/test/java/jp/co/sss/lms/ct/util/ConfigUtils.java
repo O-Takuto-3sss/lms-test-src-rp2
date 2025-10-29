@@ -67,4 +67,36 @@ public class ConfigUtils {
 	public static String getFaqCategoryId() {
 		return prop.getProperty("faqCategoryId");
 	}
+
+	/**
+	 * 未提出セクション日付を取得
+	 * @return 未提出セクション日付
+	 */
+	public static String getUnsubmitSectionDate() {
+		return prop.getProperty("sectionUnsubmitDate");
+	}
+
+	/**
+	 * レポート入力用のテキストを取得
+	 * @return レポート入力用の文字列
+	 */
+	public static String getReportRegisterText() {
+		return prop.getProperty("reportRegisterText");
+	}
+
+	/**
+	 * 提出済セクション日付を取得
+	 * @return 提出済セクション日付
+	 */
+	public static String getSubmitSectionDate() {
+		return prop.getProperty("sectionSubmitDate");
+	}
+
+	/**
+	 * レポート更新用のテキストを取得
+	 * @return レポート更新用の文字列
+	 */
+	public static String getReportUpdateText() {
+		return prop.getProperty("reportUpdateText");
+	}
 }
